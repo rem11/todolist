@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {Button, Text} from 'react-native';
+import {Button, Platform, Text} from 'react-native';
 import CommonScreen from '../components/CommonScreen';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../const/types';
@@ -8,6 +8,7 @@ import {
   authenticateAsync,
   getEnrolledLevelAsync,
 } from 'expo-local-authentication';
+import {startActivityAsync, ActivityAction} from 'expo-intent-launcher';
 
 function LockScreen({
   navigation,
@@ -27,6 +28,10 @@ function LockScreen({
     }
   }, [navigation]);
 
+  const openDeviceSettings = useCallback(() => {
+    startActivityAsync(ActivityAction.SECURITY_SETTINGS);
+  }, []);
+
   useEffect(() => {
     (async () => {
       // Checking if user has an authentication method set up
@@ -44,10 +49,17 @@ function LockScreen({
   return (
     <CommonScreen>
       {!isEnrolled && (
-        <Text>
-          You have to set up an authentication method for your device. Please
-          navigate to settings.
-        </Text>
+        <>
+          <Text>
+            You have to set up an authentication method for your device. Please
+            navigate to settings.
+          </Text>
+          {Platform.OS === 'android' && (
+            // Couldn't find any legal way to open Settings on iOS, there're some private
+            // deeplinks, but it seems app could be banned for using them.
+            <Button title="Open settings" onPress={openDeviceSettings} />
+          )}
+        </>
       )}
       {!!isEnrolled && (
         <Button title="Open TODO List" onPress={authenticateAndOpenTodoList} />
