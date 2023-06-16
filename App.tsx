@@ -1,16 +1,39 @@
-import React from 'react';
+import React, {useEffect, useRef} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {NavigationContainer} from '@react-navigation/native';
+import {
+  NavigationContainer,
+  NavigationContainerRef,
+} from '@react-navigation/native';
 import LockScreen from './src/screens/LockScreen';
 import TodoListScreen from './src/screens/TodoListScreen';
 import {RootStackParamList} from './src/const/types';
+import {AppState} from 'react-native';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function App(): JSX.Element {
-  // TODO: add AppState handling so we'd reset to the Lock screen when app goes foreground;
+  const appState = useRef(AppState.currentState);
+  const navigatorRef = useRef<NavigationContainerRef<RootStackParamList>>(null);
+  useEffect(() => {
+    // Handle application state change, so application is locked when it goes to foreground
+    const subscription = AppState.addEventListener('change', nextAppState => {
+      if (
+        appState.current.match(/inactive|background/) &&
+        nextAppState === 'active'
+      ) {
+        navigatorRef.current?.reset({
+          index: 0,
+          routes: [{name: 'Lock'}],
+        });
+      }
+      appState.current = nextAppState;
+    });
+    return () => {
+      subscription.remove();
+    };
+  }, []);
   return (
-    <NavigationContainer>
+    <NavigationContainer ref={navigatorRef}>
       <Stack.Navigator
         initialRouteName="Lock"
         screenOptions={{headerShown: false}}>
