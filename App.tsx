@@ -17,10 +17,7 @@ function App(): JSX.Element {
   useEffect(() => {
     // Handle application state change, so application is locked when it goes to foreground
     const subscription = AppState.addEventListener('change', nextAppState => {
-      if (
-        appState.current.match(/inactive|background/) &&
-        nextAppState === 'active'
-      ) {
+      if (appState.current === 'background' && nextAppState === 'active') {
         navigatorRef.current?.reset({
           index: 0,
           routes: [{name: 'Lock'}],
