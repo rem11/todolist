@@ -5,11 +5,12 @@ import {
   NavigationContainer,
   NavigationContainerRef,
 } from '@react-navigation/native';
+import {PersistGate} from 'redux-persist/integration/react';
 import LockScreen from './src/screens/LockScreen';
 import TodoListScreen from './src/screens/TodoListScreen';
 import {RootStackParamList} from './src/const/types';
 import {AppState} from 'react-native';
-import {store} from './src/store/store';
+import {persistor, store} from './src/store/store';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -33,14 +34,16 @@ function App(): JSX.Element {
   }, []);
   return (
     <Provider store={store}>
-      <NavigationContainer ref={navigatorRef}>
-        <Stack.Navigator
-          initialRouteName="Lock"
-          screenOptions={{headerShown: false}}>
-          <Stack.Screen name="Lock" component={LockScreen} />
-          <Stack.Screen name="TODO List" component={TodoListScreen} />
-        </Stack.Navigator>
-      </NavigationContainer>
+      <PersistGate persistor={persistor}>
+        <NavigationContainer ref={navigatorRef}>
+          <Stack.Navigator
+            initialRouteName="Lock"
+            screenOptions={{headerShown: false}}>
+            <Stack.Screen name="Lock" component={LockScreen} />
+            <Stack.Screen name="TODO List" component={TodoListScreen} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </PersistGate>
     </Provider>
   );
 }
