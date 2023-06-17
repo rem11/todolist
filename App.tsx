@@ -1,4 +1,5 @@
 import React, {useEffect, useRef} from 'react';
+import {Provider} from 'react-redux';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {
   NavigationContainer,
@@ -8,6 +9,7 @@ import LockScreen from './src/screens/LockScreen';
 import TodoListScreen from './src/screens/TodoListScreen';
 import {RootStackParamList} from './src/const/types';
 import {AppState} from 'react-native';
+import {store} from './src/store/store';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -30,14 +32,16 @@ function App(): JSX.Element {
     };
   }, []);
   return (
-    <NavigationContainer ref={navigatorRef}>
-      <Stack.Navigator
-        initialRouteName="Lock"
-        screenOptions={{headerShown: false}}>
-        <Stack.Screen name="Lock" component={LockScreen} />
-        <Stack.Screen name="TODO List" component={TodoListScreen} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <Provider store={store}>
+      <NavigationContainer ref={navigatorRef}>
+        <Stack.Navigator
+          initialRouteName="Lock"
+          screenOptions={{headerShown: false}}>
+          <Stack.Screen name="Lock" component={LockScreen} />
+          <Stack.Screen name="TODO List" component={TodoListScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </Provider>
   );
 }
 
