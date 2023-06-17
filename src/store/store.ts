@@ -3,9 +3,7 @@ import {configureStore} from '@reduxjs/toolkit';
 import todoList from './todoList';
 
 export const store = configureStore({
-  reducer: {
-    todoList,
-  },
+  reducer: todoList,
 });
 
 // Get root state and dispatch types from store

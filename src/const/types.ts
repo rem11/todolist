@@ -10,11 +10,14 @@ export type RootStackParamList = {
  * State types
  */
 
-export type TodoListState = Array<TodoRecord>;
+export type TodoListState = {
+  todoList: Array<TodoRecord>;
+  latestId: number;
+};
 
 export type TodoRecord = {
   // Need separate id field to be used as
   // key for react components.
-  id: string;
+  id: number;
   text: string;
 };
