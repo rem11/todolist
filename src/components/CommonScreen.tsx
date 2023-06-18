@@ -1,26 +1,18 @@
 import React from 'react';
 import type {PropsWithChildren} from 'react';
-import {SafeAreaView, StatusBar, useColorScheme} from 'react-native';
-
-import {COLOR_BLACK, COLOR_WHITE} from '../const/colors';
+import {SafeAreaView, StyleSheet} from 'react-native';
 
 /**
  * Component including some components used in all screens
  */
 function CommonScreen({children}: PropsWithChildren): JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? COLOR_BLACK : COLOR_WHITE,
-  };
-  return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      {children}
-    </SafeAreaView>
-  );
+  return <SafeAreaView style={styles.safeArea}>{children}</SafeAreaView>;
 }
+
+const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+  },
+});
 
 export default CommonScreen;

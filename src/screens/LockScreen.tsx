@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {Button, Platform, Text} from 'react-native';
+import {Platform, StyleSheet, Text, View} from 'react-native';
 import CommonScreen from '../components/CommonScreen';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../const/types';
@@ -9,10 +9,14 @@ import {
   getEnrolledLevelAsync,
 } from 'expo-local-authentication';
 import {startActivityAsync, ActivityAction} from 'expo-intent-launcher';
+import {commonStyles} from '../const/styles';
+import Button from '../components/Button';
+import {useTheme} from '@react-navigation/native';
 
 function LockScreen({
   navigation,
 }: NativeStackScreenProps<RootStackParamList, 'Lock'>): JSX.Element {
+  const {colors} = useTheme();
   const [isEnrolled, setEnrolled] = useState(false);
 
   const authenticateAndOpenTodoList = useCallback(async () => {
@@ -28,9 +32,9 @@ function LockScreen({
     }
   }, [navigation]);
 
-  const openDeviceSettings = useCallback(() => {
+  const openDeviceSettings = () => {
     startActivityAsync(ActivityAction.SECURITY_SETTINGS);
-  }, []);
+  };
 
   useEffect(() => {
     (async () => {
@@ -48,24 +52,49 @@ function LockScreen({
 
   return (
     <CommonScreen>
-      {!isEnrolled && (
-        <>
-          <Text>
-            You have to set up an authentication method for your device. Please
-            navigate to settings.
-          </Text>
-          {Platform.OS === 'android' && (
-            // Couldn't find any legal way to open Settings on iOS, there're some private
-            // deeplinks, but it seems app could be banned for using them.
-            <Button title="Open settings" onPress={openDeviceSettings} />
-          )}
-        </>
-      )}
-      {!!isEnrolled && (
-        <Button title="Open TODO List" onPress={authenticateAndOpenTodoList} />
-      )}
+      <View style={styles.container}>
+        {!isEnrolled && (
+          <>
+            <Text style={[styles.text, {color: colors.text}]}>
+              You have to set up an authentication method for your device.
+              Please navigate to settings.
+            </Text>
+            {Platform.OS === 'android' && (
+              // Couldn't find any legal way to open Settings on iOS, there're some private
+              // deeplinks, but it seems app could be banned for using them.
+              <Button
+                style={styles.button}
+                onPress={openDeviceSettings}
+                title="Open settings"
+              />
+            )}
+          </>
+        )}
+        {!!isEnrolled && (
+          <Button
+            title="Open TODO List"
+            onPress={authenticateAndOpenTodoList}
+          />
+        )}
+      </View>
     </CommonScreen>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 16,
+  },
+  text: {
+    textAlign: 'center',
+    ...commonStyles.text,
+  },
+  button: {
+    marginTop: 16,
+  },
+});
 
 export default LockScreen;

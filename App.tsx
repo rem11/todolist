@@ -4,12 +4,14 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {
   NavigationContainer,
   NavigationContainerRef,
+  DefaultTheme,
+  DarkTheme,
 } from '@react-navigation/native';
 import {PersistGate} from 'redux-persist/integration/react';
 import LockScreen from './src/screens/LockScreen';
 import TodoListScreen from './src/screens/TodoListScreen';
 import {RootStackParamList} from './src/const/types';
-import {AppState} from 'react-native';
+import {AppState, useColorScheme} from 'react-native';
 import {persistor, store} from './src/store/store';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -32,10 +34,13 @@ function App(): JSX.Element {
       subscription.remove();
     };
   }, []);
+  const theme = useColorScheme();
   return (
     <Provider store={store}>
       <PersistGate persistor={persistor}>
-        <NavigationContainer ref={navigatorRef}>
+        <NavigationContainer
+          ref={navigatorRef}
+          theme={theme === 'dark' ? DarkTheme : DefaultTheme}>
           <Stack.Navigator
             initialRouteName="Lock"
             screenOptions={{headerShown: false}}>
