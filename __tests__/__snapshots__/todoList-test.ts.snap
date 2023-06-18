@@ -1,0 +1,61 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`test add record 1`] = `
+{
+  "latestId": 4,
+  "todoList": [
+    {
+      "id": 1,
+      "text": "Record 1",
+    },
+    {
+      "id": 2,
+      "text": "Record 2",
+    },
+    {
+      "id": 3,
+      "text": "Record 3",
+    },
+    {
+      "id": 4,
+      "text": "Record 4",
+    },
+  ],
+}
+`;
+
+exports[`test remove record 1`] = `
+{
+  "latestId": 3,
+  "todoList": [
+    {
+      "id": 1,
+      "text": "Record 1",
+    },
+    {
+      "id": 3,
+      "text": "Record 3",
+    },
+  ],
+}
+`;
+
+exports[`test update record 1`] = `
+{
+  "latestId": 3,
+  "todoList": [
+    {
+      "id": 1,
+      "text": "Record 1",
+    },
+    {
+      "id": 2,
+      "text": "Record 2 (updated)",
+    },
+    {
+      "id": 3,
+      "text": "Record 3",
+    },
+  ],
+}
+`;
